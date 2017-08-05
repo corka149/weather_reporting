@@ -6,48 +6,70 @@ use std::fs::File;
 use std::io;
 use std::io::Write;
 use weather::WeatherEntry;
-
-use chrono::prelude::Local;
+use std::fs::OpenOptions;
+use std::ops::Add;
 
 fn main() {
-    let mut input = 1;
-    let mut target = match File::create("weather.data") {
-        Ok(f) => f,
-        Err(e) => panic!("{}", e),
-    };
+    let mut input = command();
+    let mut target: File;
 
     while input != 9 {
-        let w_entry: WeatherEntry;
+        match input {
+            1 => {
+                target = match OpenOptions::new().append(true).open("weather.data") {
+                    Ok(f) => f,
+                    Err(e) => panic!("{}", e),
+                };
+                let w_entry: WeatherEntry = weather::input_weather_entry();
+                let weather_string: String = String::from("\n");
+                let weather_string: String = weather_string.add(w_entry.convert_to_string().as_str());
 
-        let mut place = String::new();
-        let date = Local::now();
-        let mut temp = String::new();
-
-        println!("Where are you?");
-        if let Err(e) = io::stdin().read_line(&mut place) {
-            panic!("That doesn't work as expected: {}",e);
+                if let Err(e) = target.write(weather_string.as_bytes()) {
+                    println!("Err while writing: {}", e);
+                };
+            }
+            2 => {
+                target = match File::open("weather.data") {
+                    Ok(f) => f,
+                    Err(e) => panic!("{}", e),
+                };
+                let entries = weather::read_weather_entries(target);
+                for e in entries {
+                    println!("{}", e);
+                }
+            }
+            _ => {}
         }
-
-        println!("What is the temperature?");
-        let temp: f64 = match io::stdin().read_line(&mut temp) {
-            Ok(_) => match temp.trim().parse() {
-                Ok(e) => e,
-                Err(_) => 0.0,
-            },
-            Err(_) => 0.0,
-        };
-
-        w_entry = weather::create_weather_entry(place, date, temp);
-
-        if let Err(e) = target.write(w_entry.convert_to_string().as_bytes()){
-            println!("Err while writing: {}", e);
-        };
-
         input = command();
     }
 }
 
-//TODO IMPLEMENT
 fn command() -> u64 {
-    9
+    let mut input: String = String::new();
+
+    println!("Select a command");
+    println!("1: Input new entry");
+    println!("2: Read weather entries");
+    println!("9: Exit program");
+
+    let input: u64 = match io::stdin().read_line(&mut input) {
+        Ok(_) => {
+            match input.trim().parse() {
+                Ok(e) => e,
+                Err(p_e) => {
+                    println!("{}", p_e);
+                    9
+                }
+            }
+        }
+        Err(r_e) => {
+            println!("{}", r_e);
+            9
+        }
+    };
+
+    if input != 1 && input != 2 && input != 9 {
+        command();
+    }
+    input
 }
