@@ -2,8 +2,7 @@
 
 pub mod schema;
 pub mod models;
-pub mod file_operations;
-pub mod database_operations;
+pub mod operations;
 
 #[macro_use] extern crate diesel;
 extern crate dotenv;

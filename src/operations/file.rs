@@ -3,10 +3,10 @@ use std::fs::File;
 use std::io::Read;
 use std::io;
 use std::f64;
-use models::WeatherEntry;
 
+use models::Entry;
 
-impl WeatherEntry {
+impl Entry {
     pub fn convert_to_string(self) -> String {
         self.place + ";" +
         self.utc_date
@@ -16,16 +16,16 @@ impl WeatherEntry {
     }
 }
 
-pub fn create_weather_entry(place: String, date: DateTime<Utc>, temperature: f64) -> WeatherEntry {
-    WeatherEntry {
+pub fn create_weather_entry(place: String, date: DateTime<Utc>, temperature: f64) -> Entry {
+    Entry {
         place: place,
         utc_date: date,
         temperature: temperature,
     }
 }
 
-pub fn read_weather_entries(mut file: File) -> Vec<WeatherEntry> {
-    let mut weather_entries: Vec<WeatherEntry> = Vec::new();
+pub fn read_weather_entries(mut file: File) -> Vec<Entry> {
+    let mut weather_entries: Vec<Entry> = Vec::new();
     let mut content: String = String::new();
 
     if let Err(e) = file.read_to_string(&mut content) {
@@ -73,7 +73,7 @@ pub fn read_weather_entries(mut file: File) -> Vec<WeatherEntry> {
     weather_entries
 }
 
-pub fn input_weather_entry() -> WeatherEntry {
+pub fn input_weather_entry() -> Entry {
     let mut place = String::new();
     let date = Utc::now();
     let mut temp = String::new();
