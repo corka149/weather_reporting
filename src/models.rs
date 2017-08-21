@@ -1,12 +1,12 @@
 use std::fmt::Result;
-use chrono::prelude::*;
 use std::fmt::Formatter;
 use std::fmt::Display;
+use chrono::NaiveDateTime;
 
 #[derive(Queryable)]
 pub struct Entry {
     pub place: String,
-    pub utc_date: DateTime<Utc>,
+    pub utc_date: NaiveDateTime,
     pub temperature: f64,
 }
 
