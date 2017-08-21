@@ -1,11 +1,11 @@
 extern crate chrono;
-
-mod weather;
+extern crate weather_reporting;
 
 use std::fs::File;
 use std::io;
 use std::io::Write;
-use weather::WeatherEntry;
+use weather_reporting::models::WeatherEntry;
+use weather_reporting::file_operations;
 use std::fs::OpenOptions;
 use std::ops::Add;
 
@@ -20,7 +20,7 @@ fn main() {
                     Ok(f) => f,
                     Err(e) => panic!("{}", e),
                 };
-                let w_entry: WeatherEntry = weather::input_weather_entry();
+                let w_entry: WeatherEntry = file_operations::input_weather_entry();
                 let weather_string: String = String::from("\n");
                 let weather_string: String = weather_string.add(w_entry.convert_to_string().as_str());
 
@@ -33,7 +33,7 @@ fn main() {
                     Ok(f) => f,
                     Err(e) => panic!("{}", e),
                 };
-                let entries = weather::read_weather_entries(target);
+                let entries = file_operations::read_weather_entries(target);
                 for e in entries {
                     println!("{}", e);
                 }

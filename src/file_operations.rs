@@ -1,28 +1,15 @@
 use chrono::prelude::*;
-use std::fmt::Display;
-use std::fmt::Formatter;
-use std::fmt::Result;
 use std::fs::File;
 use std::io::Read;
 use std::io;
 use std::f64;
+use models::WeatherEntry;
 
-pub struct WeatherEntry {
-    place: String,
-    date: DateTime<Utc>,
-    temperature: f64,
-}
-
-impl Display for WeatherEntry {
-    fn fmt(&self, f: &mut Formatter) -> Result {
-        write!(f, "({} , {} , {})", self.place, self.date, self.temperature)
-    }
-}
 
 impl WeatherEntry {
     pub fn convert_to_string(self) -> String {
         self.place + ";" +
-        self.date
+        self.utc_date
             .format("%Y-%m-%d %H:%M:%S")
             .to_string()
             .as_str() + ";" + self.temperature.to_string().as_str()
@@ -32,7 +19,7 @@ impl WeatherEntry {
 pub fn create_weather_entry(place: String, date: DateTime<Utc>, temperature: f64) -> WeatherEntry {
     WeatherEntry {
         place: place,
-        date: date,
+        utc_date: date,
         temperature: temperature,
     }
 }
