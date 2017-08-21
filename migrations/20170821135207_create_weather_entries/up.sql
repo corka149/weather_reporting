@@ -1,5 +1,5 @@
 CREATE TABLE entries(
-  id SERIAL PRIMARY KEY,
+  id SERIAL PRIMARY KEY NOT NULL,
   location VARCHAR NOT NULL,
   utc_date TIMESTAMP NOT NULL,
   temperature FLOAT NOT NULL

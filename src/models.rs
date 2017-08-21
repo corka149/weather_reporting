@@ -5,6 +5,7 @@ use chrono::NaiveDateTime;
 
 #[derive(Queryable)]
 pub struct Entry {
+    pub id: i32,
     pub place: String,
     pub utc_date: NaiveDateTime,
     pub temperature: f64,

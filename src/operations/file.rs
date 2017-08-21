@@ -20,6 +20,7 @@ pub fn create_weather_entry(place: String, date: DateTime<Utc>, temperature: f64
     let n_date = date.naive_utc();
 
     Entry {
+        id: 0,
         place: place,
         utc_date: n_date,
         temperature: temperature,
